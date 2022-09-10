@@ -149,7 +149,7 @@ int main() {
 				case '-' :
 					for (i = 1; i < int_num_of_ints; ++i) {
 						printf("%c %d ", '-', enteredIntegersConverted[i]);
-						computation -= computation - enteredIntegersConverted[i];
+						computation -= enteredIntegersConverted[i];
 					} break;
 			}	
 
