@@ -7,22 +7,16 @@
 #include <ctype.h>
 
 
-	char user_first_input[100];
-	char operation;
-	char num_of_ints[100];
-	char binaryNum[35];
-	char binary[1];
-//	char allBinaryNum[total_ints-1][35];
-//	char converted_binary[4];
-//	char binary_conv[4];
-	bool operation_validity;
-	bool num_validity;
-	bool hex_validity;
-	int converted_dec;
-	int total_ints;
+char user_first_input[100];
+char operation;
+char num_of_ints[100];
+char binaryNum[35];
+char binary[1];
+bool operation_validity, num_validity, hex_validity;	
+int total_ints, j, converted_dec;
 
 
-	// Function to determine if operation is a valid option.
+// Function to determine if operation is a valid option.
 
 int validOperation(char user_first_input[]) {
 
@@ -56,7 +50,7 @@ int validOperation(char user_first_input[]) {
 	}
 }
 
-	// Function to ensure number of integers is valid.
+// Function to ensure number of integers is valid.
 	
 int validNumberInts(char num_of_ints[]) {
 	if (strcmp(num_of_ints, "1") == 0 || strcmp(num_of_ints, "0") == 0) {
@@ -64,11 +58,10 @@ int validNumberInts(char num_of_ints[]) {
 		printf("Please enter an integer greater than 1\n");
 		return num_validity;
 	}
-	
-	int i;
+
 	int int_check = 1;
 
-	for (i=0; i < strlen(num_of_ints); ++i) {
+	for (int i=0; i < strlen(num_of_ints); ++i) {
 		if (isdigit(num_of_ints[i]) != 0) {
 			int_check *= 1;
 		} else {
@@ -86,13 +79,12 @@ int validNumberInts(char num_of_ints[]) {
 	return num_validity;
 }
 
-	// Function to ensure the entered hexadecimal is valid: must be 8 or less in hex, 0-9 and A-F
+// Function to ensure the entered hexadecimal is valid: must be 8 or less in hex, 0-9 and A-F
 	
 int validHex(char current_hex_val[]) {
-	int i;
 	int hex_check = 1;
 
-	for (i=0; i < strlen(current_hex_val); ++i) {
+	for (int i=0; i < strlen(current_hex_val); ++i) {
 		if (isdigit(current_hex_val[i]) != 0) {
 			hex_check *= 1;
 		} else if (isxdigit(current_hex_val[i]) != 0) {
@@ -110,137 +102,71 @@ int validHex(char current_hex_val[]) {
 
 	return hex_validity;
 }
-	
-	// Function to convert
-	//
-int decToBinary(char hexConvertedDec[]) {
-	int i, compare;
-
-	for (i = 31; i >= 0; i--) {
-		compare = converted_dec >> i;
-		if (compare & 1) {
-			printf("1");
-		} else {
-			printf("0");
-		}
-	}
-	printf("\n\n");
-}
-	
-/*		int convertToDec(int converted_dec) {
-			int i, compare;
-			for (i=31; i>=0; i--) {
-				compare = converted_dec >> i;
-				if (compare & 1) {
-					printf("1");
-				} else
-					printf("0");
-			}
-		} */
-
-//		const char* convertToBinary(char current_hex_val[]) {
-//			int i;
-//			int missing_val = strlen(current_hex_val) % 8;
-//			if (missing_val != 0) {
-//				for (i=8; i > missing_val; --i) {
-//					printf("0000");
-//				}
-//			}
 
 
-
-	// Ask user for input, and continue asking until valid input.
 int main() {
 
 	do {
 		do {
 			operation_validity = false;
 
-			printf("Enter operation: ");
+			printf("Enter operation: "); // Ask user for operation
 			scanf(" %s", user_first_input);	
 
-			validOperation(user_first_input);	
+			validOperation(user_first_input); // Ensure entered operation is valid	
 
-		} while (operation_validity != true);
+		} while (operation_validity != true); // Continue asking until valid operation
 
-
-	// Ask the user for a number of integers, and continue asking until valid input.
 		
-		if (operation != 'q') {
+		if (operation != 'q') { // If user enters q, skip the rest of the main function
 			do {
 				num_validity = false;
 
 				printf("Enter number of integers: ");
-				scanf(" %s", num_of_ints);
+				scanf(" %s", num_of_ints); // Ask user for number of integers
 
-				validNumberInts(num_of_ints);
+				validNumberInts(num_of_ints); // Ensure entered number is valid
 
-			} while (num_validity != true);
+			} while (num_validity != true); // Continue asking until valid input
 		
-
-	// Create array to store integers, then ask for each of the integers.
 	
 			total_ints = atoi(num_of_ints);
-			char totalHexs[total_ints-1][8];// Array of string hexadecimals
+
+			char totalHexs[total_ints-1][8];// String array of entered hexadecimals
 			char current_hex_val[8];// Array to access most recent input string
 		
-			int hexConvertedDec[total_ints-1]; // Array for converted decimals
-//			int binaryNum[32]; // Array for current converted binary
-//			int hexConvertedBi[total_ints-1][32]; // Array for all converted binaries
+			int hexConvertedDec[total_ints-1]; // Integer array for converted decimals
 
-			int i, j, bi_compare;
+			int bi_compare;
 
-			for (i = 0; i < total_ints; ++i) {
+			for (int i = 0; i < total_ints; ++i) {
 				do {
 					hex_validity = false;
 
 					printf("%s %d%s", "Enter integer", i+1, ": ");
-					scanf(" %s", current_hex_val);
+					scanf(" %s", current_hex_val); // Ask user for each hexadecimal
 
 					memcpy(totalHexs[i], current_hex_val, sizeof(current_hex_val));
 
-					validHex(current_hex_val);
+					validHex(current_hex_val); // Validate entered hexadecimals
 
 					converted_dec = (int)strtol(current_hex_val, NULL, 16);
 
-					hexConvertedDec[i] = converted_dec;
-
-//					decToBinary(converted_dec);
-
-/*					for (j = 31; j >= 0; --j) {
-						bi_compare = converted_dec >> j;
-						if (bi_compare & 1) {
-							binaryNum[31-j] = 1;
-						} else {
-							binaryNum[31-j] = 0;
-						}
-					}
-
-					memcpy(hexConvertedBi[i], binaryNum, sizeof(binaryNum));
-*/
-//					convertToBinary(current_hex_val);
-//					converted_dec = convertToDec(current_hex_val);
-//					hexConvertedDec[i] = converted_dec;
+					hexConvertedDec[i] = converted_dec; // Store converted decimals
 
 
-		//			printf("%d\n", converted_dec);
-					
-		//			char binary_conv[] = "";
-		//			printf("%s\n", binary_conv);
-		//			memcpy(converted_binary[i], binary_conv, sizeof(binary_conv));
-
-
-				} while (hex_validity != true);
+				} while (hex_validity != true); // Ask for input until valid
 			}
 
 			
+// Using entered values, perform required operations and print results
 
-	// Compute result and print hexadecimal operation
 			int computation = hexConvertedDec[0];
+			int i;
 
 			printf("\n%s\n\t  %08X", "Hexadecimal operation:", hexConvertedDec[0]);
 
-			switch(operation) {
+			switch(operation) { // Prints Hexadecimal based on operation entered
 				
 				case '|' :
 					for (i = 1; i < total_ints; ++i) {
@@ -262,38 +188,49 @@ int main() {
 					
 			}
 			
-			printf("\n\t%c %08X", '=', computation);
-			printf("\n\n");
+			printf("\n\t%c %08X\n\n", '=', computation);
 
-		decToBinary(hexConvertedDec[0]);
-
+			printf("%s\n\t ", "Binary operation:");
 			
-/*
-			int compare;
-			for (i = 31; i >= 0; i--) {
-				compare = hexConvertedDec[0] >> i;
+			for (int j = 0; j < total_ints; ++j) { // Converts input to binary and prints
+				if (operation == '|' && j != 0) {
+					printf("|");
+				} else if (operation == '&' && j != 0) {
+					printf("&");
+				} else if (operation == '^' && j != 0) {
+					printf("^");
+				}
+				for (i = 31; i >= 0; i--) {
+					int compare = hexConvertedDec[j] >> i;
+					if ((i+1) % 8 == 0) {
+						printf(" ");
+					}
+					if (compare & 1) {
+						printf("1");
+					} else {
+						printf("0");
+					}
+				}
+				printf("\n\t");
+			}
+			printf("%c", '=');
+
+			for (i = 31; i >= 0; i--) { // Converts computation to binary and prints
+				int compare = computation >> i;
+				if ((i+1) % 8 == 0) {
+					printf(" ");
+				}
 				if (compare & 1) {
 					printf("1");
 				} else {
 					printf("0");
 				}
 			}
-
-*/
-//			printf("%s\n\t  %d", "Binary operation:", convertToDec(hexConvertedDec[0]));
-			
-
-	
-	// Print binary operation
-	
-
-
+			printf("\n\n");
 
 		}
 
-	// Quit the program when q is entered
-
-	} while (operation != 'q');
+	} while (operation != 'q'); // Quits the program when q is entered
 	
 	return 0;
 }
